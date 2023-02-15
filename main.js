@@ -45,7 +45,7 @@ class BggApiClient {
 	}
 }
 
-const MAX_AGE = 8;
+const MAX_RELEASE_YEAR_AGE = 10;
 const MIN_PLAYERS = 6;
 const MIN_COMPLEXITY = 2.25;
 const MIN_AGE = 12;
@@ -70,7 +70,7 @@ async function pGetGames () {
 	if (fs.existsSync(PATH_DUMP)) return JSON.parse(fs.readFileSync(PATH_DUMP, "utf-8"));
 
 	const minDate = new Date()
-	minDate.setFullYear(minDate.getFullYear() - MAX_AGE)
+	minDate.setFullYear(minDate.getFullYear() - MAX_RELEASE_YEAR_AGE)
 	minDate.setMilliseconds(0);
 
 	const games = (await BggApiClient.pGetTopCoopGames())
