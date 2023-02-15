@@ -129,7 +129,7 @@ function doHtmlOutput (outFilt) {
 
 	const page = template.replace(/\$CONTENT\$/, htmlRows);
 
-	fs.writeFileSync(`docs/index.html`, page, "utf-8");
+	fs.writeFileSync(`dist/index.html`, page, "utf-8");
 }
 
 main()
