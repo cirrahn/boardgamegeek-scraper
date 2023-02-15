@@ -115,8 +115,13 @@ function doHtmlOutput (outFilt) {
 	const template = fs.readFileSync(`template.html`, "utf-8");
 
 	const htmlRows = outFilt.map(detail => {
+		const linkName = detail.name.toLowerCase().trim()
+			.replace(/[^a-z ]/g, " ")
+			.replace(/\s+/g, "+");
+
 		return `<div>
 			<h4><a href="${BggApiClient.getFullLink(detail.href)}">${detail.name} (${detail.yearpublished})</a></h4>
+			<div>Buy: <a href="https://www.amazon.co.uk/s?k=${linkName}+board+game">Amazon</a> | <a href="https://www.ebay.co.uk/sch/i.html?_nkw=${linkName}&rt=nc&LH_BIN=1">eBay</a></div>
 			<div>Players: ${detail.minplayers}-${detail.maxplayers} | Playtime: ${detail.minplaytime}-${detail.maxplaytime} mins | Complexity: ${Number(detail.polls.boardgameweight.averageweight).toFixed(2)}</div>
 			<p><i>${detail.short_description}</i></p>
 			<img src="${detail.imageurl}">
