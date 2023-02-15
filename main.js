@@ -5,7 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 class BggApiClient {
 	static _PAGE_LIMIT_LIST = 50;
 
-	static async pGetTopCoopGames ({count = 1000} = {}) {
+	static async pGetTopCoopGames ({count = 500} = {}) {
 		return (await Promise.all(
 			[...new Array(Math.ceil(count / this._PAGE_LIMIT_LIST))]
 				.map(async (_, i) => {
@@ -28,6 +28,7 @@ class BggApiClient {
 			"minplaytime",
 			"maxplaytime",
 			"minage",
+			"stats",
 			"rankinfo",
 			"polls",
 			"short_description",
@@ -49,6 +50,7 @@ const MAX_RELEASE_YEAR_AGE = 10;
 const MIN_PLAYERS = 6;
 const MIN_COMPLEXITY = 2.25;
 const MIN_AGE = 12;
+const MIN_RATING = 6.9;
 
 async function main () {
 	const out = await pGetGames();
@@ -56,6 +58,7 @@ async function main () {
 	const outFilt = out
 		.filter(detail => detail.polls.boardgameweight.averageweight >= MIN_COMPLEXITY)
 		.filter(detail => Number(detail.minage) >= MIN_AGE)
+		.filter(detail => Number(detail.stats.average) >= MIN_RATING)
 		.sort((a, b) => a.rankinfo[0].rank.localeCompare(b.rankinfo[0].rank, undefined, {numeric: true}));
 
 	console.log(`Filtered down to ${outFilt.length} games after applying complexity/age/etc.`);
@@ -119,8 +122,10 @@ function doHtmlOutput (outFilt) {
 			.replace(/[^a-z ]/g, " ")
 			.replace(/\s+/g, "+");
 
+		const rating = Number(detail.stats.average);
+
 		return `<div>
-			<h4><a href="${BggApiClient.getFullLink(detail.href)}">${detail.name} (${detail.yearpublished})</a></h4>
+			<h4><span title="Rating" class="${rating >= 8 ? "bg-success" : "bg-primary"} text-white px-1">${rating.toFixed(1)}</span> <a href="${BggApiClient.getFullLink(detail.href)}">${detail.name}</a> (${detail.yearpublished})</h4>
 			<div>Buy: <a href="https://www.amazon.co.uk/s?k=${linkName}+board+game">Amazon</a> | <a href="https://www.ebay.co.uk/sch/i.html?_nkw=${linkName}&rt=nc&LH_BIN=1">eBay</a></div>
 			<div>Players: ${detail.minplayers}-${detail.maxplayers} | Playtime: ${detail.minplaytime}-${detail.maxplaytime} mins | Complexity: ${Number(detail.polls.boardgameweight.averageweight).toFixed(2)}</div>
 			<p><i>${detail.short_description}</i></p>
