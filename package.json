@@ -1,0 +1,14 @@
+{
+	"name": "boardgamegeek-scraper",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "A script to dump top large-player co-op games from BoardGameGeek",
+	"scripts": {
+		"build": "node main.js"
+	},
+	"author": "cirrahn",
+	"license": "MIT",
+	"dependencies": {
+		"sanitize-html": "^2.9.0"
+	}
+}

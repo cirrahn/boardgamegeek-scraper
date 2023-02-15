@@ -1,0 +1,58 @@
+name: Build and Deploy Pages
+
+on:
+   push:
+      branches:
+         - master
+   workflow_dispatch:
+
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+   contents: read
+   pages: write
+   id-token: write
+
+concurrency:
+   group: "pages"
+   cancel-in-progress: true
+
+jobs:
+   deploy:
+      environment:
+         name: github-pages
+         url: ${{ steps.deployment.outputs.page_url }}
+
+      runs-on: ubuntu-latest
+
+      steps:
+         -  name: Checkout
+            uses: actions/checkout@master
+
+         -  name: Node Setup
+            uses: actions/setup-node@v3
+            with:
+               node-version: 19
+
+         -  name: Build
+            run: |
+               node --version
+               npm --version
+               npm i
+               npm run build
+
+         -  name: Cleanup
+            run: |
+               rm -rf node_modules
+
+         -  name: Setup Pages
+            uses: actions/configure-pages@master
+
+         -  name: Upload artifact
+            uses: actions/upload-pages-artifact@master
+            with:
+               path: '.'
+
+         -  name: Deploy to GitHub Pages
+            id: deployment
+            uses: actions/deploy-pages@master
