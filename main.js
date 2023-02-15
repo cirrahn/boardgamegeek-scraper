@@ -123,11 +123,12 @@ function doHtmlOutput (outFilt) {
 			.replace(/\s+/g, "+");
 
 		const rating = Number(detail.stats.average);
+		const complexity = Number(detail.polls.boardgameweight.averageweight);
 
 		return `<div>
 			<h4><span title="Rating" class="${rating >= 8 ? "bg-success" : "bg-primary"} text-white px-1">${rating.toFixed(1)}</span> <a href="${BggApiClient.getFullLink(detail.href)}">${detail.name}</a> (${detail.yearpublished})</h4>
 			<div>Buy: <a href="https://www.amazon.co.uk/s?k=${linkName}+board+game">Amazon</a> | <a href="https://www.ebay.co.uk/sch/i.html?_nkw=${linkName}&rt=nc&LH_BIN=1">eBay</a></div>
-			<div>Players: ${detail.minplayers}-${detail.maxplayers} | Playtime: ${detail.minplaytime}-${detail.maxplaytime} mins | Complexity: ${Number(detail.polls.boardgameweight.averageweight).toFixed(2)}</div>
+			<div>Players: ${detail.minplayers}-${detail.maxplayers} | Playtime: ${detail.minplaytime}${detail.maxplaytime === detail.minplaytime ? "" : `-${detail.maxplaytime}`} mins | Complexity: <b class="${complexity >= 4 ? "text-danger" : complexity >= 3 ? "text-warning" : "text-success"}">${complexity.toFixed(2)}</b></div>
 			<p><i>${detail.short_description}</i></p>
 			<img src="${detail.imageurl}">
 			<section>
