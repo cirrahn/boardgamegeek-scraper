@@ -132,6 +132,7 @@ function doHtmlOutput (outFilt) {
 		const linkName = detail.name.toLowerCase().trim()
 			.replace(/[^a-z ]/g, " ")
 			.replace(/\s+/g, "+");
+		const linkNameFull = `${linkName}+board+game`;
 
 		const rating = Number(detail.stats.average);
 		const complexity = Number(detail.polls.boardgameweight.averageweight);
@@ -140,7 +141,7 @@ function doHtmlOutput (outFilt) {
 
 		return `<div>
 			<h4><span title="Rating" class="${rating >= 8 ? "bg-success" : "bg-primary"} text-white px-1">${rating.toFixed(1)}</span> <a href="${BggApiClient.getFullLink(detail.href)}">${detail.name}</a> (${detail.yearpublished})</h4>
-			<div>Buy: <a href="https://www.amazon.co.uk/s?k=${linkName}+board+game">Amazon</a> | <a href="https://www.ebay.co.uk/sch/i.html?_nkw=${linkName}&rt=nc&LH_BIN=1">eBay</a></div>
+			<div>Buy: <a href="https://www.amazon.co.uk/s?k=${linkNameFull}">Amazon</a> | <a href="https://www.ebay.co.uk/sch/i.html?_nkw=${linkNameFull}&rt=nc&LH_BIN=1">eBay</a></div>
 			<div>Players: ${detail.minplayers}-${detail.maxplayers} <small title="Community Recommendation" class="text-muted">(rec. ${minMaxPlayers.min}${minMaxPlayers.max !== minMaxPlayers.min ? `-${minMaxPlayers.max}` : ""}; best ${bestPlayers.min}${bestPlayers.max !== bestPlayers.min ? `-${bestPlayers.max}` : ""})</small> | Playtime: ${detail.minplaytime}${detail.maxplaytime === detail.minplaytime ? "" : `-${detail.maxplaytime}`} mins | Complexity: <b class="${complexity >= 4 ? "text-danger" : complexity >= 3 ? "text-warning" : "text-success"}">${complexity.toFixed(2)}</b></div>
 			${detail.short_description ? `<p><i>${detail.short_description}</i></p>` : ""}
 			<img src="${detail.imageurl}">
